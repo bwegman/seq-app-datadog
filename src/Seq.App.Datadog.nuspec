@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<package >
+  <metadata>
+    <id>Seq.App.Canary</id>
+    <version>1.0.0</version>
+    <authors>PitCrew</authors>
+    <owners>PitCrew</owners>
+    <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
+    <projectUrl>https://bitbucket.org/pitcrew/seq.app.canary</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>Monitors one or more applications reporting events, writing an event back to the stream when an application has not reported an event within the given timeout period.</description>
+    <releaseNotes></releaseNotes>
+    <copyright>Copyright PitCrew</copyright>
+    <tags>seq-app seq serilog event</tags>
+    <dependencies>
+      <dependency id="Seq.Apps" version="3.4.17" />
+      <dependency id="Serilog" version="2.3.0" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="bin\Release\Seq.App.Canary.dll" target="lib\net45" />
+    <file src="bin\Release\Seq.App.Canary.pdb" target="lib\net45" />
+  </files>
+</package>
