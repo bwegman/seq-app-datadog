@@ -7,8 +7,12 @@ assembly_info:
   assembly_version: '{version}.0'
   assembly_file_version: '{version}.0'
   assembly_informational_version: '{version}'
+cache:
+  - packages -> **\packages.config  
 build:
   project: Seq.App.Datadog.sln
+before_build:
+  - cmd: nuget restore
 #   publish_nuget: true
 #   publish_nuget_symbols: true
 #   verbosity: minimal
