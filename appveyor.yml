@@ -10,15 +10,16 @@ assembly_info:
 cache:
   - packages -> **\packages.config  
 build:
+  parallel: true
+  publish_nuget: true
+  publish_nuget_symbols: true
+  verbosity: minimal
   project: Seq.App.Datadog.sln
 before_build:
   - cmd: nuget restore
-#   publish_nuget: true
-#   publish_nuget_symbols: true
-#   verbosity: minimal
-# deploy:
-# - provider: NuGet
-#   api_key:
-#     secure: owIruqEXZlFwqcSBYyjR19/8EodS+aXFzZmBwqlaYnDE/uy1X+KsuI5QH3p9iBmx
-#   on:
-#     branch: master
+deploy:
+- provider: NuGet
+  api_key:
+    secure: 7AEjsMVjXlx/6ycR0amEVzgvxf6cxLg7P+S6D+O9nu4ESUXrfs55lMTL7mFGee4N
+  on:
+    branch: master
