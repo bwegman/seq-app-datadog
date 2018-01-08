@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>Seq.App.Datadog</id>
-    <version>$version$</version>
+    <version>$version$-alpha</version>
     <authors>PitCrew, Benjamin Wegman</authors>
     <owners>PitCrew</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
