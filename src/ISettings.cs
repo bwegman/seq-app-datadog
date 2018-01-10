@@ -2,8 +2,7 @@
 {
     public interface ISettings
     {
-        string DatadogApiKey { get; }
-        string ApplicationProperty { get; }
-        string Tags { get; }
+        string MetricName { get; }
+        string DefaultTags { get; }
     }
 }

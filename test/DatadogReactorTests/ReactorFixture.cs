@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using Moq;
 using Seq.Apps;
@@ -37,15 +36,11 @@ namespace Seq.App.Datadog.Tests.DatadogReactorTests
             outputHelper.WriteLine(log.ToString());
         }
 
-        public static Event<LogEventData> EventForApplication(string applicationName, string machineName)
+        public static Event<LogEventData> EventForApplication(LogEventLevel level)
         {
             return new Event<LogEventData>("1", 0, DateTime.Now, new LogEventData
             {
-                Properties = new Dictionary<string, object>
-                {
-                    {"ApplicationName", applicationName},
-                    {"MachineName", machineName}
-                }
+                Level = level
             });
         }
     }

@@ -2,10 +2,8 @@
 {
     public static class TestConstants
     {
-        public const string ApplicationName = "ApplicationName";
+        public const string MetricName = "MetricTest123";
 
-        public const string ApiKey = "DD-123456";
-
-        public static string Tags = "Tag1\nTag2\nTag3";
+        public static string DefaultTags = "Tag1\nTag2\nTag3";
     }
 }

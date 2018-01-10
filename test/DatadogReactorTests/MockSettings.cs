@@ -2,10 +2,8 @@
 {
     public class MockSettings : ISettings
     {
-        public string DatadogApiKey { get; } = TestConstants.ApiKey;
-        
-        public string ApplicationProperty { get; } = TestConstants.ApplicationName;
+        public string MetricName { get; } = TestConstants.MetricName;
 
-        public string Tags { get; } = TestConstants.Tags;
+        public string DefaultTags { get; } = TestConstants.DefaultTags;
     }
 }
