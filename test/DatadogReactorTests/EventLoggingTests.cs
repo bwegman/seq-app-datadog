@@ -52,7 +52,7 @@ namespace Seq.App.Datadog.Tests.DatadogReactorTests
         [Fact]
         public void DoesNotLogExtraTags()
         {
-            var tags = Array.Empty<string>();
+            var tags = new string[0];
 
             _dataDogMockForDebug.Setup(x => x.Increment(It.IsAny<string>(), 1, 1, It.IsAny<string[]>()))
                 .Callback((string metric, long value, double sampleRate, string[] actualTags) =>

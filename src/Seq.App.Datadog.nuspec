@@ -6,7 +6,7 @@
     <authors>PitCrew, Benjamin Wegman</authors>
     <owners>PitCrew</owners>
     <licenseUrl>http://opensource.org/licenses/MIT</licenseUrl>
-    <projectUrl>https://github.com/bwegman/seq-app-datadog</projectUrl>
+    <projectUrl>https://github.com/personal-it-crew/seq-app-datadog</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>Reports statistics from Seq to Datadog.</description>
     <releaseNotes></releaseNotes>
@@ -18,7 +18,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\Release\Seq.App.Datadog.dll" target="lib\net47" />
-    <file src="bin\Release\Seq.App.Datadog.pdb" target="lib\net47" />
+    <file src="bin\Release\Seq.App.Datadog.dll" target="lib\net45" />
+    <file src="bin\Release\Seq.App.Datadog.pdb" target="lib\net45" />
   </files>
 </package>
