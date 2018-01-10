@@ -13,6 +13,7 @@ namespace Seq.App.Datadog.Tests.DatadogReactorTests
     {
         private readonly List<Mock<IDatadogStats>> _mocks;
         private readonly List<Mock<IDisposable>> _disposables;
+        private readonly Func<string[], LogEventLevel, IDatadogStats> _mockCollectorFactory;
 
         private static readonly int LogLevelCount = Enum.GetValues(typeof(LogEventLevel)).Length;
 
@@ -21,7 +22,7 @@ namespace Seq.App.Datadog.Tests.DatadogReactorTests
             _mocks = new List<Mock<IDatadogStats>>();
             _disposables = new List<Mock<IDisposable>>();
 
-            DatadogReactor.CreateCollector = (tags, level) =>
+            _mockCollectorFactory = (tags, level) =>
             {
                 var mock = new Mock<IDatadogStats>();
                 var disposable = mock.As<IDisposable>();
@@ -36,7 +37,7 @@ namespace Seq.App.Datadog.Tests.DatadogReactorTests
         [Fact]
         public void DoesNotCreateCollectorsOnCreate()
         {
-            using (var reactor = new DatadogReactor())
+            using (var reactor = new DatadogReactor(_mockCollectorFactory))
             {
             }
 
@@ -46,7 +47,7 @@ namespace Seq.App.Datadog.Tests.DatadogReactorTests
         [Fact]
         public void CreatesCollectorsOnAttach()
         {
-            using (var reactor = new DatadogReactor())
+            using (var reactor = new DatadogReactor(_mockCollectorFactory))
             {
                 reactor.Attach(Mock.Of<IAppHost>());
             }
@@ -57,12 +58,12 @@ namespace Seq.App.Datadog.Tests.DatadogReactorTests
         [Fact]
         public void DisposesCollectors()
         {
-            using (var reactor = new DatadogReactor())
+            using (var reactor = new DatadogReactor(_mockCollectorFactory))
             {
                 reactor.Attach(Mock.Of<IAppHost>());
             }
 
-            Assert.Equal(Enum.GetValues(typeof(LogEventLevel)).Length, _disposables.Count);
+            Assert.Equal(LogLevelCount, _disposables.Count);
 
             foreach(var disposable in _disposables)
                 disposable.Verify(x => x.Dispose(), Times.Once);

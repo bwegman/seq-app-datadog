@@ -25,8 +25,9 @@ namespace Seq.App.Datadog
         public string DefaultTags { get; set; } = string.Empty;
 
         private readonly Dictionary<LogEventLevel, IDatadogStats> _collectors = new Dictionary<LogEventLevel, IDatadogStats>();
+        private readonly Func<string[], LogEventLevel, IDatadogStats> _collectorFactory;
 
-        public static Func<string[], LogEventLevel, IDatadogStats> CreateCollector { get; set; } = (defaultTags, level) =>
+        private static Func<string[], LogEventLevel, IDatadogStats> DefaultCollectorFactory => (defaultTags, level) =>
         {
             var levelTag = $"level:{level.ToString().ToLowerInvariant()}";
 
@@ -39,6 +40,11 @@ namespace Seq.App.Datadog
             );
         };
 
+        public DatadogReactor(Func<string[], LogEventLevel, IDatadogStats> createCollector = null)
+        {
+            this._collectorFactory = createCollector ?? DefaultCollectorFactory;
+        }
+
         protected override void OnAttached()
         {
             base.OnAttached();
@@ -47,7 +53,7 @@ namespace Seq.App.Datadog
 
             foreach (var level in Enum.GetValues(typeof(LogEventLevel)).Cast<LogEventLevel>())
             {
-                _collectors.Add(level,CreateCollector(tags, level));
+                _collectors.Add(level, _collectorFactory(tags, level));
             }
         }
 

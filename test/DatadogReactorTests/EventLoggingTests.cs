@@ -11,10 +11,11 @@ namespace Seq.App.Datadog.Tests.DatadogReactorTests
     {
         private Mock<IDatadogStats> _dataDogMockForDebug;
         private readonly DatadogReactor _reactor;
+        private readonly Func<string[], LogEventLevel, IDatadogStats> _mockCollectorFactory;
 
         public EventLoggingTests()
         {
-            DatadogReactor.CreateCollector = (tags, level) =>
+            _mockCollectorFactory = (tags, level) =>
             {
                 var mock = new Mock<IDatadogStats>();
 
@@ -24,7 +25,7 @@ namespace Seq.App.Datadog.Tests.DatadogReactorTests
                 return mock.Object;
             };
 
-            _reactor = new DatadogReactor
+            _reactor = new DatadogReactor(_mockCollectorFactory)
             {
                 MetricName = TestConstants.MetricName
             };
