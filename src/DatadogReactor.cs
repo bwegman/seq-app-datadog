@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using DatadogSharp.DogStatsd;
 using Seq.Apps;
 using Seq.Apps.LogEvents;
+using StatsdClient;
 
 namespace Seq.App.Datadog
 {
@@ -24,49 +23,36 @@ namespace Seq.App.Datadog
             InputType = SettingInputType.LongText)]
         public string DefaultTags { get; set; } = string.Empty;
 
-        private readonly Dictionary<LogEventLevel, IDatadogStats> _collectors = new Dictionary<LogEventLevel, IDatadogStats>();
-        private readonly Func<string[], LogEventLevel, IDatadogStats> _collectorFactory;
-
-        private static Func<string[], LogEventLevel, IDatadogStats> DefaultCollectorFactory => (defaultTags, level) =>
-        {
-            var levelTag = $"level:{level.ToString().ToLowerInvariant()}";
-
-            return new DatadogStats(
-                address: "127.0.0.1",
-                port: 8125, // Optional, default is 8125
-                metricNamePrefix: null, // Optinal, if exists prefix, append "prefix." on every metrics call
-                defaultTags: defaultTags.Concat(new[] {levelTag})
-                    .ToArray() // Optional, append this tag with called tags
-            );
-        };
-
-        public DatadogReactor(Func<string[], LogEventLevel, IDatadogStats> createCollector = null)
-        {
-            this._collectorFactory = createCollector ?? DefaultCollectorFactory;
-        }
+        private string[] _tagArray;
 
         protected override void OnAttached()
         {
             base.OnAttached();
 
-            var tags = DefaultTags.Split('\n');
-
-            foreach (var level in Enum.GetValues(typeof(LogEventLevel)).Cast<LogEventLevel>())
+            DogStatsd.Configure(new StatsdConfig
             {
-                _collectors.Add(level, _collectorFactory(tags, level));
-            }
+                StatsdServerName = "localhost",
+            });
+
+            _tagArray = DefaultTags.Split('\n');
         }
 
         public void On(Event<LogEventData> evt)
         {
-            var collector = _collectors[evt.Data.Level];
-            collector.Increment(MetricName);
+            var tags = GetTags(evt);
+
+            DogStatsd.Increment(MetricName, tags: tags);
+        }
+
+        private string[] GetTags(Event<LogEventData> evt)
+        {
+            var levelTag = $"level:{evt.Data.Level.ToString().ToLowerInvariant()}";
+
+            return _tagArray.Concat(new[] {levelTag}).ToArray();
         }
 
         public void Dispose()
         {
-            foreach(var collector in _collectors)
-                (collector.Value as IDisposable)?.Dispose();
         }
     }
 }
