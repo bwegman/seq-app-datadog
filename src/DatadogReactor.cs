@@ -29,19 +29,33 @@ namespace Seq.App.Datadog
         {
             base.OnAttached();
 
-            DogStatsd.Configure(new StatsdConfig
+            var config = new StatsdConfig
             {
-                StatsdServerName = "localhost",
-            });
+                StatsdServerName = "127.0.0.1",
+            };
+
+            DogStatsd.Configure(config);
 
             _tagArray = DefaultTags.Split('\n');
+
+            Log.Debug("Attached using DogStatsD {@Config} and {Tags}", config, _tagArray);
         }
 
         public void On(Event<LogEventData> evt)
         {
-            var tags = GetTags(evt);
+            try
+            {
+                var tags = GetTags(evt);
 
-            DogStatsd.Increment(MetricName, tags: tags);
+                Log.Debug("Incrementing {MetricName} with {Tags}", MetricName, tags);
+
+                DogStatsd.Increment(MetricName, tags: tags);
+            }
+            catch (Exception e)
+            {
+                Log.Error(e, "Error while incrementing {MetricName}", MetricName);
+                throw;
+            }
         }
 
         private string[] GetTags(Event<LogEventData> evt)
